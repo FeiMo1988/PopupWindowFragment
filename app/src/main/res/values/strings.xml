@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">DavidDemos</string>
+
+    <string-array name="gravity_values">
+        <item>bottom</item>
+        <item>center</item>
+        <item>top</item>
+    </string-array>
+
+    <string-array name="window_anim">
+        <item>Like Activity</item>
+        <item>Like Toast</item>
+        <item>Like Dialog</item>
+        <item>Like InputMethod</item>
+    </string-array>
+
+</resources>
