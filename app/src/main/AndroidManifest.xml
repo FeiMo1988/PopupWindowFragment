@@ -16,6 +16,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".popupwindow.Demos_PopupWindowFragment"/>
+        <activity android:name=".multiclick.Demos_MultiClick"/>
     </application>
 
 </manifest>
