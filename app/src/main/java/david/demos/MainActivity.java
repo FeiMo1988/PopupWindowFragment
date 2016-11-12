@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 
+import david.demos.menus.Demos_Menus;
 import david.demos.multiclick.Demos_MultiClick;
 import david.demos.popupwindow.Demos_PopupWindowFragment;
 
@@ -23,6 +24,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void testMultiClick(View view) {
         Intent intent = new Intent(this,Demos_MultiClick.class);
+        this.startActivity(intent);
+    }
+
+    public void testMenuClick(View view) {
+        Intent intent = new Intent(this,Demos_Menus.class);
         this.startActivity(intent);
     }
 

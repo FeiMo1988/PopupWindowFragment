@@ -17,6 +17,7 @@ public class MultiClickInterapterWarpperListener implements View.OnClickListener
     private static final long CLICK_OVER_TIME = 500l;
     public long mOverTime = CLICK_OVER_TIME;
     private View.OnClickListener mListener;
+
     private long mPreTime = -1;
 
 

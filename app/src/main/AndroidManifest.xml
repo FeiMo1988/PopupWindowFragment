@@ -17,6 +17,7 @@
         </activity>
         <activity android:name=".popupwindow.Demos_PopupWindowFragment"/>
         <activity android:name=".multiclick.Demos_MultiClick"/>
+        <activity android:name=".menus.Demos_Menus" android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+    <ImageView
+        android:id="@id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"/>
+    <ViewStub
+        android:id="@id/left_stub"
+        android:inflatedId="@id/left_stub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/icon" />
+    <TextView
+        android:id="@id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@id/left_stub"
+        android:paddingLeft="11dp"
+        android:paddingRight="3dp"
+        android:layout_centerVertical="true"
+        android:text="title"/>
+
+    <TextView
+        android:id="@id/message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="message"/>
+
+    <ViewStub
+        android:id="@id/right_stub"
+        android:inflatedId="@id/right_stub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/title" />
+</merge>

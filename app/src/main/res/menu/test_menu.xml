@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item app:item_icon="@mipmap/ic_launcher"
+        app:item_title="menu0"
+        app:item_message="message0"
+        tools:ignore="MenuTitle">
+        <menu>
+            <item app:item_icon="@mipmap/ic_launcher"
+                app:item_title="menu0.submenu1">
+                <menu>
+                    <item app:item_icon="@mipmap/ic_launcher"
+                        app:item_title="menu0.submenu1.submenu1"/>
+                    <item app:item_icon="@mipmap/ic_launcher"
+                        app:item_title="menu0.submenu1.submenu2"/>
+                </menu>
+            </item>
+            <item app:item_icon="@mipmap/ic_launcher"
+                app:item_title="menu0.submenu2"/>
+
+        </menu>
+    </item>
+
+    <item app:item_icon="@mipmap/ic_launcher"
+        app:item_title="menu1"
+        app:item_message="message1"
+        tools:ignore="MenuTitle"/>
+
+    <item app:item_icon="@mipmap/ic_launcher"
+        app:item_title="menu2"
+        app:item_message="message2"
+        tools:ignore="MenuTitle">
+        <menu>
+            <item app:item_icon="@mipmap/ic_launcher"
+                app:item_title="menu2.submenu1"/>
+            <item app:item_icon="@mipmap/ic_launcher"
+                app:item_title="menu2.submenu2"/>
+
+        </menu>
+    </item>
+
+
+    <item app:item_icon="@mipmap/ic_launcher"
+        app:item_title="menu3"
+        app:item_message="message2"
+        tools:ignore="MenuTitle"/>
+
+    <item app:item_icon="@mipmap/ic_launcher"
+        app:item_title="menu4"
+        app:item_message="message4"
+        tools:ignore="MenuTitle">
+        <menu>
+            <item app:item_icon="@mipmap/ic_launcher"
+                app:item_title="menu4.submenu1"/>
+            <item app:item_icon="@mipmap/ic_launcher"
+                app:item_title="menu4.submenu2"/>
+
+        </menu>
+    </item>
+
+
+
+</menu>
