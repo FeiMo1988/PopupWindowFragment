@@ -1,6 +1,7 @@
 package david.support.ext.menus.views;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
@@ -9,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import david.support.ext.R;
+import david.support.ext.debug.Logger;
 import david.support.ext.menus.DavidMenu;
 
 /**
@@ -26,7 +28,7 @@ public class MenuItemLayout extends RelativeLayout {
     private View leftStubView;
     private ViewStub rightStub;
     private View rightStubView;
-
+    private static final Logger  LOG = new Logger(MenuItemLayout.class);
 
 
     public MenuItemLayout(Context context) {

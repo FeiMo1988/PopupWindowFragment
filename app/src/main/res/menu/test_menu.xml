@@ -13,12 +13,15 @@
                 <menu>
                     <item app:item_icon="@mipmap/ic_launcher"
                         app:item_title="menu0.submenu1.submenu1"/>
-                    <item app:item_icon="@mipmap/ic_launcher"
-                        app:item_title="menu0.submenu1.submenu2"/>
+                    <item
+                        app:item_icon="@mipmap/ic_launcher"
+                        app:item_title="menu0.submenu1.submenu2"
+                        />
                 </menu>
             </item>
             <item app:item_icon="@mipmap/ic_launcher"
-                app:item_title="menu0.submenu2"/>
+                app:item_title="menu0.submenu2"
+                app:item_leftstub="@layout/inner_menus_stub"/>
 
         </menu>
     </item>
@@ -36,7 +39,8 @@
             <item app:item_icon="@mipmap/ic_launcher"
                 app:item_title="menu2.submenu1"/>
             <item app:item_icon="@mipmap/ic_launcher"
-                app:item_title="menu2.submenu2"/>
+                app:item_title="menu2.submenu2"
+                app:item_rightstub="@layout/inner_menus_stub"/>
 
         </menu>
     </item>

@@ -5,6 +5,7 @@
         <attr name="menu_background_color" format="color|reference"/>
         <attr name="menu_title_size" format="dimension|reference"/>
         <attr name="menu_message_size" format="dimension|reference"/>
+        <attr name="menu_select_color" format="color|reference"/>
         <attr name="menu_title_color" format="color|reference"/>
         <attr name="menu_message_color" format="color|reference"/>
         <attr name="menu_icon_width" format="dimension|reference"/>
@@ -26,6 +27,7 @@
         <attr name="item_message" format="string|reference"/>
         <attr name="item_leftstub" format="reference"/>
         <attr name="item_rightstub" format="reference"/>
+        <attr name="item_tailstub" format="reference"/>
     </declare-styleable>
 
 
@@ -38,6 +40,9 @@
         <item name="menu_title_color">@android:color/white</item>
         <item name="menu_message_size">14px</item>
         <item name="menu_message_color">#999999</item>
+        <item name="menu_select_color">#333333</item>
+        <item name="menu_icon_width">14dp</item>
+        <item name="menu_icon_height">14dp</item>
         <item name="menu_background_color">#404040</item>
         <item name="menu_item_width">280dp</item>
         <item name="menu_item_height">55dp</item>
@@ -53,6 +58,6 @@
     <item type="id" name="message"/>
     <item type="id" name="left_stub"/>
     <item type="id" name="right_stub"/>
-
+    <item type="id" name="tail_stub"/>
 
 </resources>

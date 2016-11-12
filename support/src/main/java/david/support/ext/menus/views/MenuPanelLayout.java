@@ -1,15 +1,18 @@
 package david.support.ext.menus.views;
 
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Property;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
+import android.view.animation.DecelerateInterpolator;
 
 import david.support.ext.debug.Logger;
 import david.support.ext.menus.DavidMenu;
+import david.support.ext.menus.DavidMenuPopupWindow;
 
 /**
  * Created by chendingwei on 16/11/12.
@@ -24,8 +27,8 @@ public class MenuPanelLayout extends ViewGroup {
     private MenuPanelLayout mChildPanelLayout = null;
     private IMenusPanelContainer mContainer = null;
     private static final Logger LOG = new Logger(MenuPanelLayout.class);
-
-
+    private ObjectAnimator mObjectAnimator = null;
+    private static final int ANIMATION_TIME = 250;
     public MenuPanelLayout(Context context) {
         super(context);
     }
@@ -51,6 +54,20 @@ public class MenuPanelLayout extends ViewGroup {
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
+
+        if (mSelectItem != null && mSelectItem.subMenu != null && mSelectItem.getView() != null) {
+            canvas.save();
+            View view = mSelectItem.getView();
+            Rect temp = new Rect();
+            mPaint.setColor(mMenu.getSelectColor());
+            temp.left = 0;
+            temp.right = getWidth();
+            temp.top = view.getTop();
+            temp.bottom = view.getBottom();
+            canvas.drawRect(temp,mPaint);
+            canvas.restore();
+        }
+
         super.dispatchDraw(canvas);
         if (this.mMenu != null && this.getChildCount() > 0) {
             int h = this.mMenu.getDividerHeight();
@@ -131,7 +148,6 @@ public class MenuPanelLayout extends ViewGroup {
     private class OnClickImpl implements OnClickListener {
         @Override
         public void onClick(View view) {
-            LOG.log("onclick "+mSelectItem);
             if (mSelectItem != null) {
                 if (mSelectItem.getView() == view) {
                     return;
@@ -145,7 +161,7 @@ public class MenuPanelLayout extends ViewGroup {
         }
     }
 
-    private void performUnSelect() {
+    public void performUnSelect() {
         if (mSelectItem != null) {
             mSelectItem.getView().setSelected(false);
         }
@@ -161,10 +177,12 @@ public class MenuPanelLayout extends ViewGroup {
         int index = getViewIndex(view);
         DavidMenu.DavidMenuItem item = this.mMenu.getItem(index);
         if (item.subMenu != null && mContainer != null) {
-            MenuPanelLayout layout = mContainer.addPanel(item.subMenu);
+            mContainer.performItemClick(this.mMenu,item);
+            MenuPanelLayout layout = mContainer.addPanel(item.subMenu,item);
             this.mChildPanelLayout = layout;
         }
         mSelectItem = item;
+        this.invalidate();
     }
 
     private int getViewIndex(View view) {
@@ -179,10 +197,52 @@ public class MenuPanelLayout extends ViewGroup {
     }
 
     public void dismiss() {
+        if (mObjectAnimator != null) {
+            mObjectAnimator.cancel();
+        }
         this.performUnSelect();
         if (mContainer != null) {
             this.mContainer.removePanel(this);
         }
+    }
+
+    public void showAnimation() {
+        if (mObjectAnimator == null) {
+            mObjectAnimator = new ObjectAnimator();
+            mObjectAnimator.setFloatValues(0,1);
+            mObjectAnimator.setTarget(this);
+            mObjectAnimator.setDuration(ANIMATION_TIME);
+            mObjectAnimator.setStartDelay(30);
+            mObjectAnimator.setTarget(this);
+            mObjectAnimator.setProperty(new ScaleProperty());
+            mObjectAnimator.setInterpolator(new DecelerateInterpolator());
+        }
+        mObjectAnimator.cancel();
+        this.setScale(0);
+        mObjectAnimator.start();
+    }
+
+
+    private class ScaleProperty extends Property<MenuPanelLayout,Float> {
+
+        public ScaleProperty() {
+            super(Float.class, "MenuPanelLayout");
+        }
+
+        @Override
+        public Float get(MenuPanelLayout object) {
+            return 1f;
+        }
+
+        @Override
+        public void set(MenuPanelLayout object, Float value) {
+            setScale(value);
+        }
+    }
+
+    private void setScale(float v) {
+        this.setScaleY(v);
+        this.setScaleX(v);
     }
 
 }

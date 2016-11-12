@@ -26,5 +26,20 @@ public final class Logger {
         }
     }
 
+    public void printStack(int depth) {
+        StackTraceElement[] eles = Thread.currentThread().getStackTrace();
+        boolean begin = false;
+        for (StackTraceElement e:eles) {
+            if (!begin && "printStack".equals(e.getMethodName())) {
+                begin = true;
+                continue;
+            }
+            if (begin && depth >=0) {
+                log(">>>"+e.getClassName()+"."+e.getMethodName()+"()");
+                depth --;
+            }
+        }
+    }
+
 
 }

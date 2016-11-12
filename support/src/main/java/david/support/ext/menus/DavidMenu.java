@@ -12,6 +12,7 @@ import java.util.List;
 
 import david.support.ext.R;
 import david.support.ext.debug.Logger;
+import david.support.ext.menus.views.MenuItemLayout;
 
 /**
  * Created by chendingwei on 16/11/12.
@@ -36,9 +37,10 @@ public class DavidMenu {
     private int mItemHeight;
     private int mItemWidth;
     private int mDividerColor ;
+    private int mSelectColor;
     private View mView;
     private int mDividerHeight ;
-    private static final Logger  LOG = new Logger(DavidMenu.class);
+    private static final Logger  LOG = new Logger(DavidMenu.class,MenuItemLayout.class);
 
 
     public void setView(View view) {
@@ -50,10 +52,10 @@ public class DavidMenu {
     }
 
     public void readAttr(Context context,AttributeSet attrs, DavidMenu parent,DavidMenuInflater inflater) {
-        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MenuStyleableAttrs);
 
+        TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.MenuStyleableAttrs);
         this.mBackgroundId = a.getResourceId(R.styleable.MenuStyleableAttrs_menu_background, -1);
-        this.mBackgroundColor = a.getResourceId(R.styleable.MenuStyleableAttrs_menu_background_color, -1);
+        this.mBackgroundColor = a.getColor(R.styleable.MenuStyleableAttrs_menu_background_color, -1);
         this.mTitleSize = (int)a.getDimension(R.styleable.MenuStyleableAttrs_menu_title_size,-1);
         this.mIconWidth =(int)a.getDimension(R.styleable.MenuStyleableAttrs_menu_icon_width, -1);
         this.mIconHeight = (int)a.getDimension(R.styleable.MenuStyleableAttrs_menu_icon_height, -1);
@@ -71,8 +73,13 @@ public class DavidMenu {
         this.mItemWidth = (int)a.getDimension(R.styleable.MenuStyleableAttrs_menu_item_width, -1);
 
         this.mItemHeight = (int)a.getDimension(R.styleable.MenuStyleableAttrs_menu_item_height, -1);
+        this.mSelectColor = a.getColor(R.styleable.MenuStyleableAttrs_menu_select_color, -1);
 
         if (parent != null) {
+
+            if (this.mSelectColor == -1) {
+                this.mSelectColor = parent.mSelectColor;
+            }
 
             if (mItemWidth == -1) {
                 this.mItemWidth = parent.mItemWidth;
@@ -193,7 +200,9 @@ public class DavidMenu {
             this.mDividerHeight = inflater.mDefaultDividerHeight;
         }
 
-        LOG.log("messagesize = "+this.mMessageSize);
+        if (mSelectColor == -1) {
+            this.mSelectColor = inflater.mDefaultSelectColor;
+        }
         a.recycle();
     }
 
@@ -236,6 +245,10 @@ public class DavidMenu {
 
     public int getDividerColor() {
         return this.mDividerColor;
+    }
+
+    public int getSelectColor() {
+        return this.mSelectColor;
     }
 
     public DavidMenu setItemSize(int w,int h) {

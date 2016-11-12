@@ -11,6 +11,8 @@ public interface IMenusPanelContainer {
 
     public void removePanel(MenuPanelLayout view);
 
-    public MenuPanelLayout addPanel(DavidMenu menu);
+    public MenuPanelLayout addPanel(DavidMenu menu,DavidMenu.DavidMenuItem item);
+
+    public void performItemClick(DavidMenu menu, DavidMenu.DavidMenuItem item);
 
 }

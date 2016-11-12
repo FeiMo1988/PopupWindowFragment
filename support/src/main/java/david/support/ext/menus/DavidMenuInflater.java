@@ -67,6 +67,7 @@ public class DavidMenuInflater {
      int mDefaultMessageColor;
      int mDefaultItemWidth;
      int mDefaultItemHeight;
+     int mDefaultSelectColor;
 
 
     /**
@@ -101,6 +102,7 @@ public class DavidMenuInflater {
         mDefaultMessageSize = (int)array.getDimension(R.styleable.MenuStyleableAttrs_menu_message_size, 15);
         mDefaultItemWidth = (int)array.getDimension(R.styleable.MenuStyleableAttrs_menu_item_width, 100);
         mDefaultItemHeight = (int)array.getDimension(R.styleable.MenuStyleableAttrs_menu_item_height, 50);
+        mDefaultSelectColor = array.getColor(R.styleable.MenuStyleableAttrs_menu_select_color,Color.TRANSPARENT);
 
         array.recycle();
     }
@@ -245,7 +247,6 @@ public class DavidMenuInflater {
 
         private void setItem(DavidMenu.DavidMenuItem item) {
                 item.setIcon(itemIconResId);
-
         }
 
         public void addItem() {
