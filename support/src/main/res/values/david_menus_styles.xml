@@ -8,6 +8,18 @@
         <attr name="menu_select_color" format="color|reference"/>
         <attr name="menu_title_color" format="color|reference"/>
         <attr name="menu_message_color" format="color|reference"/>
+        <attr name="menu_enter_anim">
+            <flag name="none" value="0x00"/>
+            <flag name="scale" value="0x01"/>
+            <flag name="translate" value="0x02"/>
+            <flag name="fade" value="0x04"/>
+        </attr>
+        <attr name="menu_exit_anim">
+            <flag name="none" value="0x00"/>
+            <flag name="scale" value="0x01"/>
+            <flag name="translate" value="0x02"/>
+            <flag name="fade" value="0x04"/>
+        </attr>
         <attr name="menu_icon_width" format="dimension|reference"/>
         <attr name="menu_item_height" format="dimension|reference"/>
         <attr name="menu_item_width" format="dimension|reference"/>
@@ -25,8 +37,8 @@
         <attr name="item_icon" format="reference"/>
         <attr name="item_title" format="string|reference"/>
         <attr name="item_message" format="string|reference"/>
-        <attr name="item_leftstub" format="reference"/>
-        <attr name="item_rightstub" format="reference"/>
+        <attr name="item_headstub" format="reference"/>
+        <attr name="item_middlestub" format="reference"/>
         <attr name="item_tailstub" format="reference"/>
     </declare-styleable>
 
@@ -50,14 +62,36 @@
         <item name="menu_divider_height">1px</item>
         <item name="menu_paddingLeft">20dp</item>
         <item name="menu_paddingRight">20dp</item>
+        <item name="menu_exit_anim">scale</item>
+        <item name="menu_enter_anim">scale</item>
+    </style>
+
+
+    <style name="DavidMenusTheme.Defualt.Phone">
+        <item name="menu_title_size">5dp</item>
+        <item name="menu_title_color">@android:color/white</item>
+        <item name="menu_message_size">3dp</item>
+        <item name="menu_message_color">#999999</item>
+        <item name="menu_select_color">#333333</item>
+        <item name="menu_icon_width">10dp</item>
+        <item name="menu_icon_height">10dp</item>
+        <item name="menu_background_color">#404040</item>
+        <item name="menu_item_width">150dp</item>
+        <item name="menu_item_height">50dp</item>
+        <item name="menu_divider_color">#2e2e2e</item>
+        <item name="menu_divider_height">1px</item>
+        <item name="menu_paddingLeft">5dp</item>
+        <item name="menu_paddingRight">5dp</item>
+        <item name="menu_exit_anim">scale</item>
+        <item name="menu_enter_anim">scale</item>
     </style>
 
     <item type="id" name="title"/>
     <item type="id" name="icon"/>
     <item type="id" name="info"/>
     <item type="id" name="message"/>
-    <item type="id" name="left_stub"/>
-    <item type="id" name="right_stub"/>
+    <item type="id" name="head_stub"/>
+    <item type="id" name="middle_stub"/>
     <item type="id" name="tail_stub"/>
 
 </resources>

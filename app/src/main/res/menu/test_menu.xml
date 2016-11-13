@@ -7,7 +7,7 @@
         app:item_title="menu0"
         app:item_message="message0"
         tools:ignore="MenuTitle">
-        <menu>
+        <menu app:menu_enter_anim="translate|fade">
             <item app:item_icon="@mipmap/ic_launcher"
                 app:item_title="menu0.submenu1">
                 <menu>
@@ -20,8 +20,7 @@
                 </menu>
             </item>
             <item app:item_icon="@mipmap/ic_launcher"
-                app:item_title="menu0.submenu2"
-                app:item_leftstub="@layout/inner_menus_stub"/>
+                app:item_title="menu0.submenu2"/>
 
         </menu>
     </item>
@@ -39,8 +38,7 @@
             <item app:item_icon="@mipmap/ic_launcher"
                 app:item_title="menu2.submenu1"/>
             <item app:item_icon="@mipmap/ic_launcher"
-                app:item_title="menu2.submenu2"
-                app:item_rightstub="@layout/inner_menus_stub"/>
+                app:item_title="menu2.submenu2"/>
 
         </menu>
     </item>

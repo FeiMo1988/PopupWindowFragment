@@ -1,7 +1,6 @@
 package david.support.ext.menus.views;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewStub;
@@ -24,10 +23,12 @@ public class MenuItemLayout extends RelativeLayout {
     private TextView titleView;
     private ImageView iconView;
     private TextView messageView;
-    private ViewStub leftStub;
-    private View leftStubView;
-    private ViewStub rightStub;
-    private View rightStubView;
+    private ViewStub headStub;
+    private View headStubView;
+    private ViewStub middleStub;
+    private ViewStub tailStub;
+    private View middleStubView;
+    private View tailStubView;
     private static final Logger  LOG = new Logger(MenuItemLayout.class);
 
 
@@ -37,8 +38,9 @@ public class MenuItemLayout extends RelativeLayout {
         titleView = (TextView) this.findViewById(R.id.title);
         iconView = (ImageView) this.findViewById(R.id.icon);
         messageView = (TextView) this.findViewById(R.id.message);
-        leftStub = (ViewStub) this.findViewById(R.id.left_stub);
-        rightStub = (ViewStub) this.findViewById(R.id.right_stub);
+        headStub = (ViewStub) this.findViewById(R.id.head_stub);
+        middleStub = (ViewStub) this.findViewById(R.id.middle_stub);
+        tailStub = (ViewStub) this.findViewById(R.id.tail_stub);
     }
 
     public void setItem(DavidMenu.DavidMenuItem item,DavidMenu menu) {
@@ -47,8 +49,9 @@ public class MenuItemLayout extends RelativeLayout {
         this.item.setView(this);
         this.prepareTitle();
         this.prepareIcon();
-        this.prepareLeftStub();
-        this.prepareRightStub();
+        this.prepareMiddleStub();
+        this.prepareHeadStub();
+        this.prepareTailStub();
         this.prepareMessage();
     }
 
@@ -63,37 +66,54 @@ public class MenuItemLayout extends RelativeLayout {
         }
     }
 
-    private void prepareLeftStub() {
-        if (item.leftStubId != -1) {
-            LayoutParams params = (LayoutParams) this.leftStub.getLayoutParams();
+    private void prepareTailStub() {
+        if (item.tailStubId != -1) {
+            LayoutParams params = (LayoutParams) this.tailStub.getLayoutParams();
             params.width = this.menu.getIconWidth();
             params.height = this.menu.getIconHeight();
-            leftStub.setLayoutResource(item.leftStubId);
-            leftStubView = leftStub.inflate();
-            leftStubView.setVisibility(View.VISIBLE);
-            iconView.setVisibility(View.GONE);
+            tailStub.setLayoutResource(item.tailStubId);
+            tailStubView = tailStub.inflate();
+            tailStubView.setVisibility(View.VISIBLE);
         } else {
-            if (leftStubView != null) {
-                leftStubView.setVisibility(View.GONE);
+            if (tailStubView != null) {
+                tailStubView.setVisibility(View.GONE);
             } else {
-                leftStub.setVisibility(View.GONE);
+                middleStub.setVisibility(View.GONE);
             }
         }
     }
 
-    private void prepareRightStub() {
-        if (item.rightStubId != -1) {
-            LayoutParams params = (LayoutParams) this.rightStub.getLayoutParams();
+    private void prepareHeadStub() {
+        if (item.headStubId != -1) {
+            LayoutParams params = (LayoutParams) this.headStub.getLayoutParams();
             params.width = this.menu.getIconWidth();
             params.height = this.menu.getIconHeight();
-            rightStub.setLayoutResource(item.rightStubId);
-            rightStubView = rightStub.inflate();
-            rightStubView.setVisibility(View.VISIBLE);
+            headStub.setLayoutResource(item.headStubId);
+            headStubView = headStub.inflate();
+            headStubView.setVisibility(View.VISIBLE);
+            iconView.setVisibility(View.GONE);
         } else {
-            if (rightStubView != null) {
-                rightStubView.setVisibility(View.GONE);
+            if (headStubView != null) {
+                headStubView.setVisibility(View.GONE);
             } else {
-                rightStub.setVisibility(View.GONE);
+                headStub.setVisibility(View.GONE);
+            }
+        }
+    }
+
+    private void prepareMiddleStub() {
+        if (item.middleStubId != -1) {
+            LayoutParams params = (LayoutParams) this.middleStub.getLayoutParams();
+            params.width = this.menu.getIconWidth();
+            params.height = this.menu.getIconHeight();
+            middleStub.setLayoutResource(item.middleStubId);
+            middleStubView = middleStub.inflate();
+            middleStubView.setVisibility(View.VISIBLE);
+        } else {
+            if (middleStubView != null) {
+                middleStubView.setVisibility(View.GONE);
+            } else {
+                middleStub.setVisibility(View.GONE);
             }
         }
     }

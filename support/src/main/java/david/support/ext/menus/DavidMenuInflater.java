@@ -16,6 +16,7 @@ import java.io.IOException;
 
 import david.support.ext.R;
 import david.support.ext.debug.Logger;
+import david.support.ext.menus.views.MenuItemLayout;
 
 /**
  * Created by chendingwei on 16/11/12.
@@ -23,7 +24,7 @@ import david.support.ext.debug.Logger;
 
 public class DavidMenuInflater {
 
-    private static final Logger LOG = new Logger(MenuState.class);
+//    private static final Logger LOG = new Logger(MenuState.class, MenuItemLayout.class);
 
     /** Menu tag name in XML. */
     private static final String XML_MENU = "menu";
@@ -64,6 +65,8 @@ public class DavidMenuInflater {
      int mDefaultTitleColor;
      int mDefaultMessageSize;
 
+     int mDefaultMenuAnimExit;
+     int mDefaultMenuAnimEnter;
      int mDefaultMessageColor;
      int mDefaultItemWidth;
      int mDefaultItemHeight;
@@ -74,7 +77,7 @@ public class DavidMenuInflater {
      * Constructs a menu inflater.
      */
     public DavidMenuInflater(Context context) {
-        this(context,R.style.DavidMenusTheme_Defualt);
+        this(context,R.style.DavidMenusTheme_Defualt_Phone);
     }
 
     /**
@@ -84,8 +87,8 @@ public class DavidMenuInflater {
         mContext = context;
         TypedArray array = context.obtainStyledAttributes(theme,R.styleable.MenuStyleableAttrs);
         mDefaultBackgroundId = array.getResourceId(R.styleable.MenuStyleableAttrs_menu_background,-1);
-        mDefaultIconWidth = array.getResourceId(R.styleable.MenuStyleableAttrs_menu_icon_width, ViewGroup.LayoutParams.WRAP_CONTENT);
-        mDefaultIconHeight = array.getResourceId(R.styleable.MenuStyleableAttrs_menu_icon_height,ViewGroup.LayoutParams.WRAP_CONTENT);
+        mDefaultIconWidth = (int)array.getDimension(R.styleable.MenuStyleableAttrs_menu_icon_width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mDefaultIconHeight = (int)array.getDimension(R.styleable.MenuStyleableAttrs_menu_icon_height,ViewGroup.LayoutParams.WRAP_CONTENT);
 
         mDefaultBackgroundColor = array.getColor(R.styleable.MenuStyleableAttrs_menu_background_color, Color.BLACK);
         mDefaultTitleSize = (int)array.getDimension(R.styleable.MenuStyleableAttrs_menu_title_size,10);
@@ -103,6 +106,9 @@ public class DavidMenuInflater {
         mDefaultItemWidth = (int)array.getDimension(R.styleable.MenuStyleableAttrs_menu_item_width, 100);
         mDefaultItemHeight = (int)array.getDimension(R.styleable.MenuStyleableAttrs_menu_item_height, 50);
         mDefaultSelectColor = array.getColor(R.styleable.MenuStyleableAttrs_menu_select_color,Color.TRANSPARENT);
+
+        mDefaultMenuAnimEnter = array.getInteger(R.styleable.MenuStyleableAttrs_menu_enter_anim,DavidMenu.ANIM_SCALE);
+        mDefaultMenuAnimExit = array.getInteger(R.styleable.MenuStyleableAttrs_menu_exit_anim,DavidMenu.ANIM_SCALE);
 
         array.recycle();
     }
@@ -215,8 +221,10 @@ public class DavidMenuInflater {
         private CharSequence itemTitle;
         private int itemIconResId;
         private CharSequence itemMessage;
-        private int itemLeftStubResId;
-        private int itemRightStubResId;
+        private int itemHeadStubResId;
+        private int itemMiddleStubResId;
+        private int itemTailStubResId;
+
 
         public MenuState(DavidMenu menu) {
             this.menu = menu;
@@ -239,8 +247,9 @@ public class DavidMenuInflater {
             itemTitle = a.getString(R.styleable.MenuItemStyleableAttrs_item_title);
             itemIconResId = a.getResourceId(R.styleable.MenuItemStyleableAttrs_item_icon, -1);
             itemMessage  = a.getString(R.styleable.MenuItemStyleableAttrs_item_message);
-            itemLeftStubResId = a.getResourceId(R.styleable.MenuItemStyleableAttrs_item_leftstub, -1);
-            itemRightStubResId = a.getResourceId(R.styleable.MenuItemStyleableAttrs_item_rightstub, -1);
+            itemHeadStubResId = a.getResourceId(R.styleable.MenuItemStyleableAttrs_item_headstub, -1);
+            itemMiddleStubResId = a.getResourceId(R.styleable.MenuItemStyleableAttrs_item_middlestub, -1);
+            itemTailStubResId = a.getResourceId(R.styleable.MenuItemStyleableAttrs_item_tailstub, -1);
             a.recycle();
             itemAdded = false;
         }
@@ -251,12 +260,12 @@ public class DavidMenuInflater {
 
         public void addItem() {
             itemAdded = true;
-            setItem(menu.addItem(itemId, itemTitle,itemIconResId,itemMessage,itemLeftStubResId,itemRightStubResId));
+            setItem(menu.addItem(itemId, itemTitle,itemIconResId,itemMessage,itemHeadStubResId,itemMiddleStubResId,itemTailStubResId));
         }
 
         public DavidMenu addSubMenu() {
             itemAdded = true;
-            DavidMenu subMenu = menu.addSubMenus(itemId, itemTitle,itemIconResId,itemMessage,itemLeftStubResId,itemRightStubResId);
+            DavidMenu subMenu = menu.addSubMenus(itemId, itemTitle,itemIconResId,itemMessage,itemHeadStubResId,itemMiddleStubResId,itemTailStubResId);
             setItem(subMenu.getParent());
             return subMenu;
         }

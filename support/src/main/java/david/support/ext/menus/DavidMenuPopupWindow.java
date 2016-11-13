@@ -22,6 +22,8 @@ public class DavidMenuPopupWindow extends RelativePopupWindow {
     private ObjectAnimator mObjectAnimator = null;
     private static final Logger  LOG = new Logger(DavidMenuPopupWindow.class);
     private boolean mIsBlankClick = false;
+    private MenusContainerLayout.OnMenuItemClickListener mListener = null;
+
 
     private class ScaleProperty extends Property<DavidMenuPopupWindow,Float> {
 
@@ -59,6 +61,9 @@ public class DavidMenuPopupWindow extends RelativePopupWindow {
             this.mContainerLayout = new MenusContainerLayout(this.getContext());
             this.mContainerLayout.setMenuResource(this.mMenuResourceId);
             this.addViewToContent(this.mContainerLayout);
+            if (mListener != null) {
+                this.mContainerLayout.addOnMenuItemClickListener(this.mListener);
+            }
             mObjectAnimator = new ObjectAnimator();
             mObjectAnimator.setTarget(this);
             mObjectAnimator.setDuration(ANIM_TIME);
@@ -100,5 +105,17 @@ public class DavidMenuPopupWindow extends RelativePopupWindow {
             mContainerLayout.dismiss();
         }
         super.onBlankClick();
+    }
+
+    public final void setOnMenuItemClickListener(MenusContainerLayout.OnMenuItemClickListener listener) {
+        if (mListener != listener) {
+            if (mListener != null && mContainerLayout != null) {
+                mContainerLayout.removeOnMenuItemClickListener(this.mListener);
+            }
+            mListener = listener;
+            if (mContainerLayout != null) {
+                mContainerLayout.addOnMenuItemClickListener(this.mListener);
+            }
+        }
     }
 }

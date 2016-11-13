@@ -1,5 +1,7 @@
 package david.support.ext.menus.views;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,7 +14,6 @@ import android.view.animation.DecelerateInterpolator;
 
 import david.support.ext.debug.Logger;
 import david.support.ext.menus.DavidMenu;
-import david.support.ext.menus.DavidMenuPopupWindow;
 
 /**
  * Created by chendingwei on 16/11/12.
@@ -28,7 +29,10 @@ public class MenuPanelLayout extends ViewGroup {
     private IMenusPanelContainer mContainer = null;
     private static final Logger LOG = new Logger(MenuPanelLayout.class);
     private ObjectAnimator mObjectAnimator = null;
+    private ObjectAnimator mDismissAnimator = null;
     private static final int ANIMATION_TIME = 250;
+    private float mAnimatorValue;
+    private AnimatorProperty mProperty = new AnimatorProperty() ;
     public MenuPanelLayout(Context context) {
         super(context);
     }
@@ -177,10 +181,10 @@ public class MenuPanelLayout extends ViewGroup {
         int index = getViewIndex(view);
         DavidMenu.DavidMenuItem item = this.mMenu.getItem(index);
         if (item.subMenu != null && mContainer != null) {
-            mContainer.performItemClick(this.mMenu,item);
-            MenuPanelLayout layout = mContainer.addPanel(item.subMenu,item);
+            MenuPanelLayout layout = mContainer.addPanel(this,item.subMenu,item);
             this.mChildPanelLayout = layout;
         }
+        mContainer.performItemClick(this.mMenu,item);
         mSelectItem = item;
         this.invalidate();
     }
@@ -197,16 +201,56 @@ public class MenuPanelLayout extends ViewGroup {
     }
 
     public void dismiss() {
+        this.dismiss(mChildPanelLayout == null);
+    }
+
+    public void dismiss(boolean startAnimator) {
         if (mObjectAnimator != null) {
             mObjectAnimator.cancel();
         }
         this.performUnSelect();
-        if (mContainer != null) {
-            this.mContainer.removePanel(this);
+        if (!isExitAnimator() || !startAnimator) {
+            if (mContainer != null) {
+                this.mContainer.removePanel(this);
+            }
+        } else {
+            dismissAnimation();
+        }
+
+    }
+
+    private void dismissAnimation() {
+        if (mDismissAnimator == null) {
+            mDismissAnimator = new ObjectAnimator();
+            mDismissAnimator.setProperty(mProperty);
+            mDismissAnimator.setTarget(this);
+            mDismissAnimator.setDuration(ANIMATION_TIME);
+            mDismissAnimator.addListener(new DismissListenerImpl());
+        }
+        mDismissAnimator.cancel();
+        mDismissAnimator.setFloatValues(mAnimatorValue,0);
+        mDismissAnimator.start();
+    }
+
+    private class DismissListenerImpl extends AnimatorListenerAdapter {
+        @Override
+        public void onAnimationEnd(Animator animation) {
+            if (mContainer != null) {
+                mContainer.removePanel(MenuPanelLayout.this);
+            }
         }
     }
 
+
+    private void cancelDismiss() {
+        if (mDismissAnimator != null) {
+            mDismissAnimator.cancel();
+        }
+    }
+
+
     public void showAnimation() {
+        cancelDismiss();
         if (mObjectAnimator == null) {
             mObjectAnimator = new ObjectAnimator();
             mObjectAnimator.setFloatValues(0,1);
@@ -214,18 +258,36 @@ public class MenuPanelLayout extends ViewGroup {
             mObjectAnimator.setDuration(ANIMATION_TIME);
             mObjectAnimator.setStartDelay(30);
             mObjectAnimator.setTarget(this);
-            mObjectAnimator.setProperty(new ScaleProperty());
+            mObjectAnimator.setProperty(mProperty);
             mObjectAnimator.setInterpolator(new DecelerateInterpolator());
         }
         mObjectAnimator.cancel();
-        this.setScale(0);
-        mObjectAnimator.start();
+        if (isEnterAnimator()) {
+            mAnimatorValue = 0;
+            beginEnterAnimator();
+        } else {
+            mAnimatorValue = 1;
+        }
     }
 
 
-    private class ScaleProperty extends Property<MenuPanelLayout,Float> {
+    private void beginEnterAnimator() {
+        int enterAnim = mMenu.getEnterAnim();
+        if (isMask(enterAnim,DavidMenu.ANIM_SCALE)) {
+            setScale(0);
+        }
+        if (isMask(enterAnim,DavidMenu.ANIM_TRANSLATE)) {
+            setTranslate(0);
+        }
+        if (isMask(enterAnim,DavidMenu.ANIM_FADE)) {
+            setFade(0);
+        }
+        mObjectAnimator.start();
+    }
 
-        public ScaleProperty() {
+    private class AnimatorProperty extends Property<MenuPanelLayout,Float> {
+
+        public AnimatorProperty() {
             super(Float.class, "MenuPanelLayout");
         }
 
@@ -236,13 +298,51 @@ public class MenuPanelLayout extends ViewGroup {
 
         @Override
         public void set(MenuPanelLayout object, Float value) {
-            setScale(value);
+            setAnimator(value);
         }
+    }
+
+    private boolean isEnterAnimator() {
+        return this.mMenu.getEnterAnim() != DavidMenu.ANIM_NONE;
+    }
+
+    private boolean isExitAnimator() {
+        return this.mMenu.getExitAnim() != DavidMenu.ANIM_NONE;
+    }
+
+    private void setAnimator(float v) {
+        int enterAnim = mMenu.getEnterAnim();
+        if (isMask(enterAnim,DavidMenu.ANIM_SCALE)) {
+            setScale(v);
+        }
+        if (isMask(enterAnim,DavidMenu.ANIM_TRANSLATE)) {
+            setTranslate(v);
+        }
+        if (isMask(enterAnim,DavidMenu.ANIM_FADE)) {
+            setFade(v);
+        }
+     }
+
+    private boolean isMask(int m,int mask) {
+        return (m & mask) != 0;
+    }
+
+    private void setFade(float v) {
+        this.setAlpha(v);
+    }
+
+    private void setTranslate(float v) {
+        v = v - 1;
+        int offsetX = (int)(this.getWidth() * v);
+        this.setTranslationX(offsetX);
     }
 
     private void setScale(float v) {
         this.setScaleY(v);
         this.setScaleX(v);
+        mAnimatorValue = v;
     }
+
+
 
 }

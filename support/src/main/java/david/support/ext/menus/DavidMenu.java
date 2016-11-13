@@ -20,6 +20,11 @@ import david.support.ext.menus.views.MenuItemLayout;
 
 public class DavidMenu {
 
+    public static final int ANIM_NONE = 0x00;
+    public static final int ANIM_SCALE = 0x01;
+    public static final int ANIM_TRANSLATE = 0x01 << 1;
+    public static final int ANIM_FADE = 0x01 << 2;
+
     private List<DavidMenuItem> mItems = new ArrayList<>();
     private DavidMenuItem mParent;
     private int mBackgroundId = -1;
@@ -37,6 +42,8 @@ public class DavidMenu {
     private int mItemHeight;
     private int mItemWidth;
     private int mDividerColor ;
+    private int mEnterAnim;
+    private int mExitAnim;
     private int mSelectColor;
     private View mView;
     private int mDividerHeight ;
@@ -75,17 +82,28 @@ public class DavidMenu {
         this.mItemHeight = (int)a.getDimension(R.styleable.MenuStyleableAttrs_menu_item_height, -1);
         this.mSelectColor = a.getColor(R.styleable.MenuStyleableAttrs_menu_select_color, -1);
 
+        this.mEnterAnim = a.getInteger(R.styleable.MenuStyleableAttrs_menu_enter_anim,-1);
+        this.mExitAnim = a.getInteger(R.styleable.MenuStyleableAttrs_menu_exit_anim,-1);
+
         if (parent != null) {
+
+            if (mEnterAnim == -1) {
+                mEnterAnim = parent.mEnterAnim;
+            }
+
+            if (mExitAnim == -1) {
+                mExitAnim = parent.mExitAnim;
+            }
 
             if (this.mSelectColor == -1) {
                 this.mSelectColor = parent.mSelectColor;
             }
 
-            if (mItemWidth == -1) {
+            if (mItemWidth <= 0) {
                 this.mItemWidth = parent.mItemWidth;
             }
 
-            if (mItemHeight == -1) {
+            if (mItemHeight <= 0) {
                 this.mItemHeight = parent.mItemHeight;
             }//15
 
@@ -136,25 +154,26 @@ public class DavidMenu {
                 this.mBackgroundColor = parent.mBackgroundColor;
             }//
 
-            if (mIconWidth == -1) {
+            if (mIconWidth <= 0) {
                 this.mIconWidth = parent.mIconWidth;
             }//
 
-            if (mIconHeight == -1) {
+            if (mIconHeight <= 0) {
                 this.mIconHeight = parent.mIconHeight;
             }//
         }
         //====
-        if (this.mIconWidth == -1) {
+        if (this.mIconWidth <= 0) {
             this.mIconWidth = inflater.mDefaultIconWidth;
         }//
-        if (this.mIconHeight == -1) {
+        if (this.mIconHeight <= 0) {
             this.mIconHeight = inflater.mDefaultIconHeight;
         }//
-        if (this.mItemWidth == -1) {
+
+        if (this.mItemWidth <= 0) {
             this.mItemWidth = inflater.mDefaultItemWidth;
         }//
-        if (this.mItemHeight == -1) {
+        if (this.mItemHeight <= 0) {
             this.mItemHeight = inflater.mDefaultItemHeight;
         }//
         if (mPaddingTop == -1) {
@@ -203,6 +222,15 @@ public class DavidMenu {
         if (mSelectColor == -1) {
             this.mSelectColor = inflater.mDefaultSelectColor;
         }
+
+        if (mEnterAnim == -1) {
+            this.mEnterAnim = inflater.mDefaultMenuAnimEnter;
+        }
+
+        if (mExitAnim == -1) {
+            this.mExitAnim = inflater.mDefaultMenuAnimExit;
+        }
+
         a.recycle();
     }
 
@@ -275,6 +303,14 @@ public class DavidMenu {
 
     public int getBackgroundColor() {
         return this.mBackgroundColor;
+    }
+
+    public int getEnterAnim() {
+        return this.mEnterAnim;
+    }
+
+    public int getExitAnim() {
+        return this.mExitAnim;
     }
 
     public int getTitleColor() {
@@ -379,21 +415,22 @@ public class DavidMenu {
      <attr name="item_rightstub" format="reference"/>
      * */
     public DavidMenuItem addItem(int itemId,CharSequence itemTitle,int itemIconResId,CharSequence itemMessage,
-                                 int itemLeftStubResId,int itemRightStubResId) {
+                                 int itemHeadStubResId,int itemMiddleStubResId,int itemTailStubResId) {
         DavidMenuItem item = new DavidMenuItem();
         item.title = itemTitle;
         item.id = itemId;
         item.iconId = itemIconResId;
         item.message = itemMessage;
-        item.leftStubId = itemLeftStubResId;
-        item.rightStubId = itemRightStubResId;
+        item.headStubId = itemHeadStubResId;
+        item.middleStubId = itemMiddleStubResId;
+        item.tailStubId = itemTailStubResId;
         mItems.add(item);
         return item;
     }
 
     public DavidMenu addSubMenus(int itemId,CharSequence itemTitle,int itemIconResId,CharSequence itemMessage,
-                                 int itemLeftStubResId,int itemRightStubResId) {
-        DavidMenuItem item = this.addItem(itemId,itemTitle,itemIconResId,itemMessage,itemLeftStubResId,itemRightStubResId);
+                                 int itemHeadStubResId,int itemMiddleStubResId,int itemTailStubId) {
+        DavidMenuItem item = this.addItem(itemId,itemTitle,itemIconResId,itemMessage,itemHeadStubResId,itemMiddleStubResId,itemTailStubId);
         DavidMenu menu = new DavidMenu();
         menu.mParent = item;
         item.subMenu = menu;
@@ -407,8 +444,9 @@ public class DavidMenu {
         public CharSequence message;
         public int iconId = -1;
         public DavidMenu subMenu;
-        public int leftStubId = -1;
-        public int rightStubId = -1;
+        public int headStubId = -1;
+        public int middleStubId = -1;
+        public int tailStubId = -1;
         private View view;
 
 

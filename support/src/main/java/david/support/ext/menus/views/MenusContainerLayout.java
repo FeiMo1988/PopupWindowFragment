@@ -5,13 +5,18 @@ import android.util.Property;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.lang.ref.WeakReference;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import david.support.ext.debug.Logger;
 import david.support.ext.menus.DavidMenu;
 import david.support.ext.menus.DavidMenuInflater;
 import david.support.ext.menus.DavidMenuPopupWindow;
 
 /**
- * Created by chendingwei on 16/11/11.
+ * Created by dingwei.chen1988@gmail.com on 16/11/11.
  */
 
 public class MenusContainerLayout extends ViewGroup implements IMenusPanelContainer {
@@ -24,7 +29,7 @@ public class MenusContainerLayout extends ViewGroup implements IMenusPanelContai
     private static final Logger LOG = new Logger(MenusContainerLayout.class);
     private boolean mIsLayout = false;
     private MenuPanelLayout mRootPanelLayout;
-
+    private Set<WeakReference<OnMenuItemClickListener>> mListeners = new HashSet<>();
 
 
     public MenusContainerLayout(Context context) {
@@ -36,7 +41,7 @@ public class MenusContainerLayout extends ViewGroup implements IMenusPanelContai
         if (mMenuResourceId != id) {
             this.mMenuResourceId = id;
             this.mMenuInflater.inflate(this.mMenuResourceId,this.mMenu);
-            this.addPanel(this.mMenu,null);
+            this.addPanel(null,this.mMenu,null);
         }
     }
 
@@ -78,7 +83,7 @@ public class MenusContainerLayout extends ViewGroup implements IMenusPanelContai
     }
 
     @Override
-    public MenuPanelLayout addPanel(DavidMenu menu, DavidMenu.DavidMenuItem item) {
+    public MenuPanelLayout addPanel(MenuPanelLayout parent,DavidMenu menu, DavidMenu.DavidMenuItem item) {
         MenuPanelLayout view = (MenuPanelLayout)menu.getView();
         if (view == null) {
             view = new MenuPanelLayout(this.getContext());
@@ -86,30 +91,28 @@ public class MenusContainerLayout extends ViewGroup implements IMenusPanelContai
         }
         view.setContainer(this);
         View relativeView = item != null?item.getView():null;
-        this.addAndMeasureLayout(view,relativeView);
+        this.addAndMeasureLayout(parent,view,relativeView);
         if (mRootPanelLayout == null) {
             this.mRootPanelLayout = view;
         }
         return view;
     }
 
-    private void addAndMeasureLayout(MenuPanelLayout view,View relativeView) {
+    private void addAndMeasureLayout(MenuPanelLayout parent,MenuPanelLayout view,View relativeView) {
         this.addView(view);
         view.measure(MeasureSpec.UNSPECIFIED,MeasureSpec.UNSPECIFIED);
         if (!mIsLayout) {
             return;
         }
         int l = 0;
-        if (this.getChildCount() > 1) {
-            View last = this.getChildAt(this.getChildCount() - 2);
-            l = last.getRight();
+        if (parent != null) {
+            l = parent.getRight();
         } else {
             l = this.getPaddingLeft();
         }
         int tOffset = 0;
-        if (this.getChildCount() > 1) {
-            View last = this.getChildAt(this.getChildCount() - 2);
-            tOffset = last.getTop();
+        if (parent != null) {
+            tOffset = parent.getTop();
         }
         int t = this.getHeight() - view.getMeasuredHeight();
         if (relativeView != null) {
@@ -127,7 +130,7 @@ public class MenusContainerLayout extends ViewGroup implements IMenusPanelContai
 
     @Override
     public void performItemClick(DavidMenu menu, DavidMenu.DavidMenuItem item) {
-            LOG.log("performItemClick");
+        performMenuItemClick(menu,item);
     }
 
     public void dismiss() {
@@ -143,6 +146,67 @@ public class MenusContainerLayout extends ViewGroup implements IMenusPanelContai
         MenuPanelLayout layout = (MenuPanelLayout)this.getChildAt(this.getChildCount() - 2);
         layout.performUnSelect();
         return true;
+    }
+
+    public static interface OnMenuItemClickListener {
+        public void onMenuItemClick(DavidMenu menu, DavidMenu.DavidMenuItem item);
+    }
+
+    private void performMenuItemClick(DavidMenu menu, DavidMenu.DavidMenuItem item) {
+        Iterator<WeakReference<OnMenuItemClickListener>> iter = mListeners.iterator();
+        OnMenuItemClickListener temp = null;
+        while (iter.hasNext()) {
+            temp = iter.next().get();
+            if (temp == null) {
+                iter.remove();
+            } else {
+                temp.onMenuItemClick(menu,item);
+            }
+        }
+    }
+
+    public void addOnMenuItemClickListener(OnMenuItemClickListener listener) {
+        if (listener != null && !isContainListener(listener)) {
+            mListeners.add(new WeakReference<OnMenuItemClickListener>(listener));
+        }
+    }
+
+    public void removeOnMenuItemClickListener(OnMenuItemClickListener listener) {
+        if (listener == null) {
+            return;
+        }
+        Iterator<WeakReference<OnMenuItemClickListener>> iter = mListeners.iterator();
+        OnMenuItemClickListener temp = null;
+        while (iter.hasNext()) {
+            temp = iter.next().get();
+            if (temp == null) {
+                iter.remove();
+            } else {
+                if (temp == listener) {
+                    iter.remove();
+                    break;
+                }
+            }
+        }
+    }
+
+    private boolean isContainListener(OnMenuItemClickListener listener) {
+        if (listener == null) {
+            return false;
+        }
+        Iterator<WeakReference<OnMenuItemClickListener>> iter = mListeners.iterator();
+        OnMenuItemClickListener temp = null;
+        while (iter.hasNext()) {
+            temp = iter.next().get();
+            if (temp == null) {
+                iter.remove();
+            } else {
+                if (temp == listener) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 }

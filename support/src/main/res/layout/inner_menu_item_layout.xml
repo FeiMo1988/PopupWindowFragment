@@ -8,8 +8,8 @@
         android:layout_centerVertical="true"
         android:layout_alignParentLeft="true"/>
     <ViewStub
-        android:id="@id/left_stub"
-        android:inflatedId="@id/left_stub"
+        android:id="@id/head_stub"
+        android:inflatedId="@id/head_stub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
@@ -18,7 +18,7 @@
         android:id="@id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/left_stub"
+        android:layout_toRightOf="@id/head_stub"
         android:paddingLeft="11dp"
         android:paddingRight="3dp"
         android:layout_centerVertical="true"
@@ -33,10 +33,18 @@
         android:text="message"/>
 
     <ViewStub
-        android:id="@id/right_stub"
-        android:inflatedId="@id/right_stub"
+        android:id="@id/middle_stub"
+        android:inflatedId="@id/middle_stub"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/title" />
+
+    <ViewStub
+        android:id="@id/tail_stub"
+        android:inflatedId="@id/tail_stub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_alignParentRight="true" />
 </merge>
